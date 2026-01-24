@@ -1,12 +1,11 @@
-
-public abstract class ActionCard extends Card {
+public abstract class ActionCard extends Card implements Actionable {
 
     public ActionCard(Color color,Value value) {
         super(color, value);
     }
 
-
-    public abstract void performAction();
+    @Override
+    public abstract void performAction(Game game);
 
     @Override
     public boolean playableOn(Card top) {

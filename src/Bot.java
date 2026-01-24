@@ -6,7 +6,7 @@ public class Bot extends Player{
 
     public Card makeMove(Card topCard){
         for(Card card : hand.getCards()){
-            if(card.canBePlayedOn(topCard)){
+            if(card.playableOn(topCard)){
                 hand.removeCard(card);
                 return card;
             }
