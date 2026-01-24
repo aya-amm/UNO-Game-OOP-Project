@@ -37,7 +37,7 @@ public class Game {
 
         //get the top card (cant be wild)
         do {
-            topCard = deck.draw()
+            topCard = deck.draw();
         } while (topCard instanceof WildCard);
 
         deck.addDiscardPile(topCard);
