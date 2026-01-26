@@ -1,18 +1,25 @@
+import java.util.Scanner;
 
 public class WildCard extends Card {
     // Wild cards can be WILD or WILD_DRAW4
-    public WildCard(Color color,Value value) {
-        super(color, value);
+    public WildCard(Value value) {
+        super(Color.WILD, value);
     }
 
 
     public void chooseColor(Color newColor) {
-        this.color = newColor;//method to choose color when both WILD and WILD_DRAW4 are played
+        //method to choose color when both WILD and WILD_DRAW4 are played
+        setColor(newColor);
     }
 
-    public void performAction() {
-        if (WildCard.Value.WILD_DRAW4 == this.value) {
-             //action to make next player draw 4 cards and skip their turn when the card is WILD_DRAW4
+
+    public void performAction(Game game,Scanner scanner) {
+        //choose new color
+
+
+        //if wild draw 4 make next player draw 4 cards
+        if (getValue() == Value.WILD_DRAW4) {
+            System.out.println("Wild Draw Four played!");
         }
     }
 

@@ -7,8 +7,8 @@ public abstract class Card implements Playable {
     ZERO,ONE,TWO,THREE,FOUR,FIVE,SIX,SEVEN,EIGHT,NINE,
     DRAW2,SKIP,REVERSE,WILD,WILD_DRAW4
     }
-    protected  Value value;
-    protected  Color color;
+    private  Value value;
+    private  Color color;
     public Card(Color color, Value value) {
         this.color = color;
         this.value = value;
@@ -25,6 +25,10 @@ public abstract class Card implements Playable {
 
     public void setColor(Color color) {
         this.color = color;
+    }
+
+    public void setValue(Value value) {
+        this.value = value;
     }
     
     @Override

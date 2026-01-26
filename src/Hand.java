@@ -28,7 +28,7 @@ public class Hand {
 
     public boolean hasPlayableCard(Card topCard) {
         for (Card c : cards){
-            if(c.canBePlayedOn(topCard)){
+            if(c.playableOn(topCard)){
                 return true;
             }
         }
@@ -38,5 +38,20 @@ public class Hand {
 
     public int getSize() {
         return size;
+    }
+
+    public void displayHand(){
+        System.out.println("Your hand ( "+ size+" cards ): ");
+        for (int i = 0; i < cards.size(); i++) {
+            System.out.println((i+1)+ ". "+cards.get(i));
+        }
+    }
+
+    //to select card by index 
+    public Card getCardAt(int index){
+        if (index >=1 && index <= cards.size()) {
+            return cards.get(index);
+        }
+        return null;
     }
 }

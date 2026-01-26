@@ -13,7 +13,7 @@ public abstract class Player {
     }
 
     public boolean PlayCard(Card card , Card topCard){
-        if(card.canBePlayedOn(topCard)){
+        if(card.playableOn(topCard)){
             hand.removeCard(card);
             return true;
         }
