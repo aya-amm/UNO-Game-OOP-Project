@@ -1,7 +1,7 @@
 public abstract class Player {
 
-    protected String name;
-    protected Hand hand ;
+    private String name;
+    private Hand hand ;
 
     public Player(String name) {
         this.name = name;
@@ -20,7 +20,7 @@ public abstract class Player {
         return false;
     }
 
-    public Hand GetHand(){
+    public Hand getHand(){
         return hand;
     }
 
@@ -31,5 +31,7 @@ public abstract class Player {
     public String getName() {
         return name;
     }
-
+    public boolean hasWon(){
+        return hand.getSize() == 0;
+    }
 }
