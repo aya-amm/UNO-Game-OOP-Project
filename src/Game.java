@@ -141,7 +141,59 @@ public class Game {
     }
 
     //we ask player to announce UNO Type it
-    private void checkUNOChallenge(Player cuurentPlayer){}
+    private void checkUNOChallenge(Player currentPlayer) {
+
+        // Check if current player has exactly 1 card
+
+        if (currentPlayer.shouldAnnounceUNO()) {
+        
+            if (currentPlayer instanceof Human && !currentPlayer.hasAnnouncedUNO()) {
+                // Give current human player chance to announce UNO
+                System.out.println(currentPlayer.getName() + " has 1 card left!");
+                System.out.print(currentPlayer.getName() + ", do you have something to say? ");
+                String response = scanner.nextLine().trim();//a string whose value is this string, with all leading and trailing space removed, or this string if it has no leading or trailing space.
+            
+                if (response.equalsIgnoreCase("UNO")) {
+                    currentPlayer.announceUNO();
+                    System.out.println("Wohooo " + currentPlayer.getName() + " says UNO!");
+                } else {
+                    if (!response.isEmpty()) {
+                        System.out.println(currentPlayer.getName() + " said: \"" + response + "\"");
+                    }
+                    System.out.println("Oh noo  " + currentPlayer.getName() + " did not say UNO!");
+                }
+            } else if (currentPlayer instanceof Bot && !currentPlayer.hasAnnouncedUNO()) {
+                // Bot automatically announces
+                currentPlayer.announceUNO();
+                System.out.println("Wohooo " + currentPlayer.getName() + " says UNO!");
+            }
+        
+            // Now check if other players want to challenge (if they didn't announce)
+            if (!currentPlayer.hasAnnouncedUNO()) {
+                for (Player p : players) {
+                    if (p != currentPlayer && p instanceof Human) {
+                        System.out.print("\n" + p.getName() + ", do you want to call out " + 
+                                   currentPlayer.getName() + " for not saying UNO? (yes/no): ");
+                        String response = scanner.nextLine();
+                    
+                        if (response.equalsIgnoreCase("yes")) {
+                            System.out.println("OH noo! " + currentPlayer.getName() + " forgot to say UNO! Drawing 2 penalty cards!");
+                        
+                            for (int i = 0; i < 2; i++) {
+                                Card penaltyCard = deck.draw();
+                                if (penaltyCard != null) {
+                                    currentPlayer.drawCard(penaltyCard);
+                                }
+                            }
+                        
+                            currentPlayer.resetUNOAnnouncement();
+                            return;
+                        }
+                    }
+                }
+            }
+        }
+    }
 
     public void saveGame(){
         state = new State(players, deck, topCard, getCurrentPlayerIndex(), turn.isClockwise());
