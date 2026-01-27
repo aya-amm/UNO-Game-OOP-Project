@@ -9,14 +9,14 @@ public class State implements Serializable{
     private List<Player> players;
     private Deck deck;
     private Card topCard;
-    private Player currentPlayer;
+    private int getCurrentPlayerIndex;
     private boolean direction;
 
-    public State(List<Player> players, Deck deck, Card toCard, Player currentPlayer,boolean direction){
+    public State(List<Player> players, Deck deck, Card toCard, int getCurrentPlayerIndex,boolean direction){
         this.players = players;
         this.deck = deck;
         this.topCard = toCard;
-        this.currentPlayer = currentPlayer;
+        this.getCurrentPlayerIndex = getCurrentPlayerIndex;
         this.direction = direction;
     }
 
@@ -76,8 +76,8 @@ public class State implements Serializable{
         return topCard;
     }
 
-    public Player getCurrentPlayer() {
-        return currentPlayer;
+    public int getCurrentPlayerIndex() {
+        return getCurrentPlayerIndex;
     }
 
     public boolean getDirection(){

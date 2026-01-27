@@ -5,14 +5,20 @@ public abstract class Player implements Serializable {
 
     private String name;
     private Hand hand ;
+    private boolean hasAnnouncedUNO;//tracks if player announced UNO
 
     public Player(String name) {
         this.name = name;
         this.hand = new Hand();
+        this.hasAnnouncedUNO = false;
     }
 
     public void drawCard(Card card){
         hand.addCard(card);
+        // If player draws and now has more than 1 card, reset UNO announcement
+        if (hand.getSize() > 1) {
+            hasAnnouncedUNO = false;
+        }
     }
 
     public boolean PlayCard(Card card , Card topCard){
@@ -26,16 +32,32 @@ public abstract class Player implements Serializable {
     public Hand getHand(){
         return hand;
     }
+    //Player announces UNO
+    public void announceUNO() {
+        this.hasAnnouncedUNO = true;
+    }
 
-    public boolean announceUNO(){
+    // Check if player has announced
+    public boolean hasAnnouncedUNO() {
+        return hasAnnouncedUNO;
+    }
+
+    //Check if player have to announce (has 1 card)
+    public boolean shouldAnnounceUNO() {
         return hand.getSize() == 1;
     }
+
+    //Reset announcement (for penalties)
+    public void resetUNOAnnouncement() {
+        this.hasAnnouncedUNO = false;
+    }
+
 
     public String getName() {
         return name;
     }
     public boolean hasWon(){
-        return hand.getSize() == 0;
+        return hand.getSize() == 0 && hasAnnouncedUNO;
     }
 }
 //done
