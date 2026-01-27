@@ -140,19 +140,73 @@ public class Game {
         return false;
     }
 
+    //we ask player to announce UNO Type it
+    private void checkUNOChallenge(Player cuurentPlayer){}
+
+    public void saveGame(){
+        state = new State(players, deck, topCard, getCurrentPlayerIndex(), turn.isClockwise());
+        state.save();
+
+    }
     public boolean loadGame(){
         // if we saved the game and we want to continue we need to use it
+        State loadedState = State.load();
+        if (loadedState != null) {
+            players = loadedState.getPlayers();
+            deck = loadedState.getDeck();
+            topCard = loadedState.getTopCard();
+            turn = new Turn(players);//in the state we saved direction not turn so we have to create new turn
+
+            restoreTurnState(loadedState.getCurrentPlayerIndex(), loadedState.getDirection());
+
+            gameRunning = true;
+
+            System.out.println(" Game restored successfully.");
+
+            System.out.println("Players:");
+            for (Player p : players) {
+                System.out.println("  - " + p.getName() + " (" + p.getHand().getSize() + " cards)");
+            }
+
+            System.out.println("Current player: " + turn.getCurrentPlayer().getName());
+            System.out.println("Top card: " + topCard);
+            return true;
+        } 
         return false;
     }
+    
+    //part of the load game
 
-    private void restoreTurnState(int playerIndex, boolean direction){}//part of the load game
+    private void restoreTurnState(int playerIndex, boolean direction){
+        for (int i = 0; i < playerIndex; i++) {
+            turn.nextPlayer();
+        }
+        if (!direction) {//if when we saved the direction was reverse thats mean its have to be reveresed in the new turn we created, if direction = false ,!direction = true
+            turn.reverseOrder();
+        }
+    }
 
-    private int getCurrentPlayerIndex(){return 0 ;}
+    private int getCurrentPlayerIndex(){
+        Player current = turn.getCurrentPlayer();
+        for (int i = 0; i < players.size(); i++) {
+            if (players.get(i) == current) {
+                return i;
+            }
+        }
+        return 0 ;
+    }
 
-    public void resume(){}//with load game
+    //with load game
+    public void resume(){
+        if (loadGame()) {
+            playGame();
+        } else{
+            System.out.println("No save file found or failed to load.");
+        }
+    }
 
     public State getCurrentState(){
-        return null;
+        return new State(players, deck, topCard, getCurrentPlayerIndex(), turn.isClockwise());
     }
 
 
