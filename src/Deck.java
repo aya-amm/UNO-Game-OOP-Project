@@ -1,8 +1,12 @@
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.io.Serializable;
 
-public class Deck {
+public class Deck implements Serializable{
+
+    private static final long serialVersionUID = 1L;
+
     private List<Card> drawPile;
     private List<Card> discardPile;
 
@@ -58,6 +62,13 @@ public class Deck {
         if (drawPile.isEmpty()) {
             resetDiscardPile();
         }
+
+        //if there is a lot of plyers and the discared is empty and the draw pile is empty
+        if (drawPile.isEmpty()) {
+            System.out.println("No cards left to draw.");
+            return null;
+        }
+
         int last = drawPile.size() - 1;
         Card c = drawPile.get(last);
         drawPile.remove(last);
@@ -83,9 +94,15 @@ public class Deck {
     }
 
     private void resetDiscardPile(){
+        if (discardPile.size() < 1) {
+            return;
+        }
+
         int n = discardPile.size();
         Card topCard = discardPile.get(n - 1);
+
         drawPile.addAll(discardPile);
+
         discardPile.clear();
         discardPile.add(topCard);
         shuffle();
@@ -95,5 +112,5 @@ public class Deck {
     public int getDrawPileSize() {
         return drawPile.size();
     }
-
 }
+//done

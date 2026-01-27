@@ -1,4 +1,7 @@
-public abstract class Player {
+import java.io.Serializable;
+public abstract class Player implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     private String name;
     private Hand hand ;
@@ -8,7 +11,7 @@ public abstract class Player {
         this.hand = new Hand();
     }
 
-    public void DrawCard(Card card){
+    public void drawCard(Card card){
         hand.addCard(card);
     }
 
@@ -35,3 +38,4 @@ public abstract class Player {
         return hand.getSize() == 0;
     }
 }
+//done

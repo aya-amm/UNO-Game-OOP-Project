@@ -13,3 +13,4 @@ public class Reverse extends ActionCard {
     }
 
 }
+//still the reverse action missing we need to do the game first

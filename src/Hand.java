@@ -1,7 +1,11 @@
 import java.util.ArrayList;
 import java.util.List;
+import java.io.Serializable;
 
-public class Hand {
+public class Hand implements Serializable{
+    private static final long serialVersionUID = 1L;
+
+
     private List<Card> cards;
     private int size;
 
@@ -41,7 +45,7 @@ public class Hand {
     }
 
     public void displayHand(){
-        System.out.println("Your hand ( "+ size+" cards ): ");
+        System.out.println("Your hand ( "+ size +" cards ): ");
         for (int i = 0; i < cards.size(); i++) {
             System.out.println((i+1)+ ". "+cards.get(i));
         }
@@ -49,9 +53,10 @@ public class Hand {
 
     //to select card by index 
     public Card getCardAt(int index){
-        if (index >=1 && index <= cards.size()) {
+        if (index >= 0 && index < cards.size()) {
             return cards.get(index);
         }
         return null;
     }
 }
+//done

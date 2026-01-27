@@ -1,5 +1,9 @@
+import java.io.Serializable;
+public abstract class Card implements Playable,Serializable {
 
-public abstract class Card implements Playable {
+    private static final long serialVersionUID = 1L;
+
+
     public enum Color{
     RED,GREEN,BLUE,YELLOW,WILD
     }
@@ -7,8 +11,10 @@ public abstract class Card implements Playable {
     ZERO,ONE,TWO,THREE,FOUR,FIVE,SIX,SEVEN,EIGHT,NINE,
     DRAW2,SKIP,REVERSE,WILD,WILD_DRAW4
     }
+
     private  Value value;
     private  Color color;
+
     public Card(Color color, Value value) {
         this.color = color;
         this.value = value;
@@ -44,3 +50,4 @@ public abstract class Card implements Playable {
     return color + " " + value;
     }
 }
+//done

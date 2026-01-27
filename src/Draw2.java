@@ -13,3 +13,4 @@ public class Draw2 extends ActionCard {
     }
 
 }
+//still the draw 2 action missing we need to do the game first
