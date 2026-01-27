@@ -1,6 +1,7 @@
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import java.util.InputMismatchException;
 
 public class Game {
     private List<Player> players;
@@ -17,20 +18,33 @@ public class Game {
         this.scanner = new Scanner(System.in);
         this.gameRunning = false;
     }
-    private void createListPlayer(){
-
-    }
+    
 
     //Start the game (create the players and draw the cards )
     public void start(){
         System.out.println("==== WELCOME TO UNO ====");
-        createListPlayer();
 
-        for(Player player : players){
+        //we saved the game before case
+        if (State.saveExists()) {
+            System.out.println("Save file found! Do you want to load it? (yes/no):" );
+            String respone = scanner.nextLine();
+            if (respone.equalsIgnoreCase("yes")) {
+                if (loadGame()) {
+                    playGame();
+                }
+                else{
+                    System.out.println("Failed to load. Starting new game...");  
+                }
+            }
+        }
+
+        createListPlayer();//create players
+
+        for(Player player : players){//draw 7 to each player
             for (int i = 0; i < 7; i++) {
                 Card card = deck.draw();
                 if (card != null) {
-                    player.DrawCard(card);
+                    player.drawCard(card);
                 }
             }
         }
@@ -43,16 +57,128 @@ public class Game {
         deck.addDiscardPile(topCard);
         System.out.println("Starting Card : "+ topCard);
 
-        turn = new Turn();
+        turn = new Turn(players);
         gameRunning = true;
 
         playGame();
     }
+    
+    private void createListPlayer(){
+        int numPlayers = 0;
+        boolean validInput = false;
 
+        while (!validInput) {
+            try {
+                System.out.print("Enter number of players (2-4): ");//max 4 players we can change it later
+                numPlayers = scanner.nextInt();
+
+                if (numPlayers >= 2 && numPlayers <= 4) {
+                    validInput = true;
+                }
+                else {
+                    System.out.println("Invalid number. Please enter 2-4.");
+                }
+            } catch (InputMismatchException e) {
+                System.out.println("Invalid input. Please enter a number.");
+                scanner.nextLine();
+            }
+        }
+
+        //player information
+
+        for (int i = 0; i < numPlayers; i++) {
+            System.out.println("Enter name for Player " + (i + 1) + ": ");
+            String name = scanner.nextLine();
+            players.add(new Human(name));
+        }
+
+        System.out.println("Add bot players? (yes/no): ");
+        String addBot = scanner.nextLine();
+
+        if (addBot.equalsIgnoreCase("yes")) {
+            int numBot = 0;
+            validInput = false;
+
+            while (!validInput) {
+                try {
+                    System.out.print("How many bots? ");
+                    numBot = scanner.nextInt();
+                    scanner.nextLine();
+
+                    if (numBot >= 1 && numBot <=4) {
+                        validInput = true;
+                    } else {
+                        System.out.println("Invalid number. Please enter 1 or more (not more than 4).");
+                    }
+                } catch (InputMismatchException e) {
+                    System.out.println("Invalid input. Please enter a number.");
+                    scanner.nextLine();
+                }
+            }
+
+            for (int i = 0; i < numBot; i++) {
+                players.add(new Bot("Bot " + (i + 1)));
+            }
+        }
+
+        System.out.println("Players in game:");
+        for (Player p : players) {
+            System.out.println("- " + p.getName());
+        }
+    }
+
+
+    private void playGame(){}//the game play
+    //play game we will check if he want to leave game and we will use other methods to play the game (playerTurn methods and other methods)
+
+    private void playHumanTurn(Human player){} // for human player
+    private void playBotTurn(Bot bot){} //the bot turn 
+
+    private void playCardAction(Player player , Card card){}//we call the perform action of the card we played and announce UNO 
+
+    private boolean checkWin(){ // check if he said uno and if he have no more cards
+        return false;
+    }
+
+    public boolean loadGame(){
+        // if we saved the game and we want to continue we need to use it
+        return false;
+    }
+
+    private void restoreTurnState(int playerIndex, boolean direction){}//part of the load game
+
+    private int getCurrentPlayerIndex(){return 0 ;}
+
+    public void resume(){}//with load game
+
+    public State getCurrentState(){
+        return null;
+    }
+
+
+
+    //getters
+    public Deck getDeck() {
+        return deck;
+    }
 
     public Card getTopCard() {
         return topCard;
     }
-    private void playGame(){}
+    
+    public Turn getTurn() {
+        return turn;
+    }
+
+
+    public Player getCurrentPlayer() {
+        return turn.getCurrentPlayer();
+    }
+
+    public void cleanup() {
+        if (scanner != null) {
+            scanner.close();
+        }
+    }
 
 }

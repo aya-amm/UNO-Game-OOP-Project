@@ -30,3 +30,5 @@ public class WildCard extends Card {
     }
 
 }
+//still the wild and wild draw 4 action missing we need to do the game first
+//and we can over ride the to string so we can print

@@ -32,7 +32,7 @@ public class Turn implements Serializable{
     }
 
     //get the current player
-    public Player getCurrentPlaye() {
+    public Player getCurrentPlayer() {
         return players.get(currentPlayerIndex);
     }
 
@@ -42,3 +42,4 @@ public class Turn implements Serializable{
     }
 
 }
+//done

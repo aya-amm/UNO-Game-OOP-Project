@@ -11,3 +11,4 @@ public class Skip extends ActionCard {
     }
 
 }
+//still the skip action missing we need to do the game first
