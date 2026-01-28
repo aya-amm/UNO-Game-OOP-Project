@@ -22,9 +22,6 @@ public class Draw2 extends ActionCard {
             }
         }
         
-
-        // Skip next player's turn
-        game.getTurn().nextPlayer();
     }
 
 }
