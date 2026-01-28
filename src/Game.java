@@ -85,9 +85,10 @@ public class Game {
         }
 
         //player information
-
+        scanner.nextLine();
         for (int i = 0; i < numPlayers; i++) {
             System.out.println("Enter name for Player " + (i + 1) + ": ");
+            
             String name = scanner.nextLine();
             players.add(new Human(name));
         }
