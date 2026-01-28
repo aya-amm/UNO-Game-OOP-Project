@@ -31,12 +31,6 @@ public class Turn implements Serializable{
         direction = !direction;
     }
 
-    // Skip the next player
-    public void skipNextPlayer() {
-        nextPlayer(); // move once to skip
-    }
-
-
     //get the current player
     public Player getCurrentPlayer() {
         return players.get(currentPlayerIndex);
