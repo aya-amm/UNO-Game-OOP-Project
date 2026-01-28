@@ -178,56 +178,56 @@ public class Game {
     //play game we will check if he want to leave game and we will use other methods to play the game (playerTurn methods and other methods)
 
     private void playHumanTurn(Human player) { // for human player
-        System.out.println("\nTop Card: " + topCard);
         player.getHand().displayHand();
+
+         if (!player.getHand().hasPlayableCard(topCard)) {
+            System.out.println("No playable cards. Drawing a card...");
+            Card drawn = deck.draw();
+            if (drawn != null) {
+                player.drawCard(drawn);
+                System.out.println("Drew: " + drawn);
+                if (drawn.playableOn(topCard)){
+                        player.PlayCard(drawn, topCard);
+                       playCardAction(player, drawn);
+                    }
+                } else {
+                System.out.println("No cards to draw.");
+            }
+            return;
+        }
+
         System.out.println("Choose card index number to play");
         String input = scanner.nextLine().trim();
-        
+        boolean validChoice = false;
+
+        while(!validChoice){
+
         try {
             int idx = Integer.parseInt(input);
             List<Card> handCards = player.getHand().getCards();
             if (idx >= 1 && idx <= handCards.size()) {
                 Card selected = handCards.get(idx - 1);
                 if (player.PlayCard(selected, topCard)) {
-                    deck.addDiscardPile(selected);
                     playCardAction(player, selected);
-                    topCard = selected;
+                    validChoice = true;
                 } else {
                     System.out.println("Cannot play this card.");
+                    playHumanTurn(player); 
+                    return;
                 }
             } else {
                 System.out.println("Invalid card number.");
+                playHumanTurn(player);
+                return;
             }
         } catch (NumberFormatException e) {
             System.out.println("Invalid input.");
         }
+    }
+    }
 
-        if (!player.getHand().hasPlayableCard(topCard)) {
-            System.out.println("No playable cards. Drawing a card...");
-            Card drawn = deck.draw();
-            if (drawn != null) {
-                player.drawCard(drawn);
-                System.out.println("Drew: " + drawn);
-                if (drawn.playableOn(topCard)) {
-                    System.out.println("Play drawn card? (yes/no): ");
-                    String resp = scanner.nextLine().trim();
-                    if (resp.equalsIgnoreCase("yes") || resp.equalsIgnoreCase("y")) {
-                        if (player.PlayCard(drawn, topCard)) {
-                            deck.addDiscardPile(drawn);
-                            playCardAction(player, drawn);
-                            topCard = drawn;
-                    }
-                }
-            } else {
-                System.out.println("No cards to draw.");
-            }
-            return;
-        }
-    }
-    }
 
     private void playBotTurn(Bot bot) { //the bot turn
-        System.out.println("\nTop Card: " + topCard);
         Card toPlay = bot.makeMove(topCard);
 
         if (toPlay != null) {
