@@ -11,7 +11,7 @@ public class Skip extends ActionCard {
         
         
         // Skip the next player's turn
-        game.getTurn().skipNextPlayer();
+        game.getTurn().nextPlayer();
     }
 
 }

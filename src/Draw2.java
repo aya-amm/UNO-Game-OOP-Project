@@ -11,7 +11,8 @@ public class Draw2 extends ActionCard {
         System.out.println("Draw 2 card played!");
 
         //Get the next player from game s turn 
-        Player nextPlayer = game.getTurn().nextPlayer();
+        game.getTurn().nextPlayer();
+        Player nextPlayer = game.getCurrentPlayer();
 
         //Make the next player draw 2 cards
          for (int i = 0; i < 2; i++) {
@@ -23,7 +24,7 @@ public class Draw2 extends ActionCard {
         
 
         // Skip next player's turn
-        game.getTurn().skipNextPlayer();
+        game.getTurn().nextPlayer();
     }
 
 }

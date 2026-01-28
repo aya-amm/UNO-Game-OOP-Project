@@ -1,5 +1,5 @@
 import java.io.Serializable;
-public abstract class Card implements Playable,Serializable,Actionable {
+public abstract class Card implements Playable,Serializable {
 
     private static final long serialVersionUID = 1L;
 

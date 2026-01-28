@@ -21,7 +21,7 @@ public abstract class Player implements Serializable {
         }
     }
 
-    public boolean PlayCard(Card card , Card topCard){
+    public boolean playCard(Card card , Card topCard){
         if(card.playableOn(topCard)){
             hand.removeCard(card);
             return true;
