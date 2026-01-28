@@ -137,7 +137,17 @@ public class Game {
 
             // Play turn based on player type
             if (currentPlayer instanceof Human) {
-                playHumanTurn((Human) currentPlayer);
+                System.out.println("Do you want to save and quit the game? (Yes/No) : ");
+                 String input = scanner.nextLine().trim();
+
+                      if (input.equalsIgnoreCase("yes") || input.equalsIgnoreCase("y")) {
+                        state = new State(players, deck, topCard, getCurrentPlayerIndex(), turn.isClockwise());
+                        state.save();
+                        gameRunning = false;
+                        System.out.println("Game saved. exited successfully.");
+                      }else{
+                        playHumanTurn((Human) currentPlayer);
+                      }
             } else if (currentPlayer instanceof Bot) {
                 playBotTurn((Bot) currentPlayer);
             }
@@ -170,18 +180,30 @@ public class Game {
     private void playHumanTurn(Human player) { // for human player
         System.out.println("\nTop Card: " + topCard);
         player.getHand().displayHand();
-        System.out.println("Choose card number to play, D to draw, S to save and quit:");
-
+        System.out.println("Choose card index number to play");
         String input = scanner.nextLine().trim();
-
-        if (input.equalsIgnoreCase("S")) {
-            state = new State(players, deck, topCard, getCurrentPlayerIndex(), turn.isClockwise());
-            state.save();
-            gameRunning = false;
-            return;
+        
+        try {
+            int idx = Integer.parseInt(input);
+            List<Card> handCards = player.getHand().getCards();
+            if (idx >= 1 && idx <= handCards.size()) {
+                Card selected = handCards.get(idx - 1);
+                if (player.PlayCard(selected, topCard)) {
+                    deck.addDiscardPile(selected);
+                    playCardAction(player, selected);
+                    topCard = selected;
+                } else {
+                    System.out.println("Cannot play this card.");
+                }
+            } else {
+                System.out.println("Invalid card number.");
+            }
+        } catch (NumberFormatException e) {
+            System.out.println("Invalid input.");
         }
 
-        if (input.equalsIgnoreCase("D")) {
+        if (!player.getHand().hasPlayableCard(topCard)) {
+            System.out.println("No playable cards. Drawing a card...");
             Card drawn = deck.draw();
             if (drawn != null) {
                 player.drawCard(drawn);
@@ -200,25 +222,6 @@ public class Game {
                 System.out.println("No cards to draw.");
             }
             return;
-        }
-
-        try {
-            int idx = Integer.parseInt(input);
-            List<Card> handCards = player.getHand().getCards();
-            if (idx >= 1 && idx <= handCards.size()) {
-                Card selected = handCards.get(idx - 1);
-                if (player.PlayCard(selected, topCard)) {
-                    deck.addDiscardPile(selected);
-                    playCardAction(player, selected);
-                    topCard = selected;
-                } else {
-                    System.out.println("Cannot play this card.");
-                }
-            } else {
-                System.out.println("Invalid card number.");
-            }
-        } catch (NumberFormatException e) {
-            System.out.println("Invalid input.");
         }
     }
     }
