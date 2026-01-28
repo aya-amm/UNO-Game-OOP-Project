@@ -1,4 +1,3 @@
-import java.util.Scanner;
 
 public class WildCard extends Card {
     // Wild cards can be WILD or WILD_DRAW4
@@ -13,15 +12,30 @@ public class WildCard extends Card {
     }
 
 
-    public void performAction(Game game,Scanner scanner) {
-        //choose new color
+    public void performAction(Game game) {
+    
+         System.out.println("Wild card played!");
 
-
-        //if wild draw 4 make next player draw 4 cards
+        // Handle Wild Draw 4
         if (getValue() == Value.WILD_DRAW4) {
-            System.out.println("Wild Draw Four played!");
+            System.out.println("Wild Draw 4 played!");
+
+            Player nextPlayer = game.getTurn().getCurrentPlayer();
+
+            // Draw 4 cards
+            for (int i = 0; i < 4; i++) {
+                Card drawn = game.getDeck().draw();
+                if (drawn != null) {
+                    nextPlayer.drawCard(drawn);
+                }
+            }
+
+            // Skip next player s turn
+            game.getTurn().skipNextPlayer();
         }
     }
+       
+    
 
     @Override
     public boolean playableOn(Card top) {
@@ -29,6 +43,10 @@ public class WildCard extends Card {
         return true;//always playable
     }
 
+    @Override
+    public String toString() {
+        return getValue().toString();
+    }
+
 }
-//still the wild and wild draw 4 action missing we need to do the game first
-//and we can over ride the to string so we can print
+//done

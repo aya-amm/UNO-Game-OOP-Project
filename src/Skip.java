@@ -5,10 +5,14 @@ public class Skip extends ActionCard {
     }
 
     @Override
-    public void performAction(Game game) {
+    public void performAction(Game game ) {
         //action to skip next player's turn in the player list
-        System.out.println("Skip card played !! Next player is skipped.");
+        System.out.println("Skip card played ! Next player is skipped.");
+        
+        
+        // Skip the next player's turn
+        game.getTurn().skipNextPlayer();
     }
 
 }
-//still the skip action missing we need to do the game first
+//done

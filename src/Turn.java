@@ -1,5 +1,5 @@
-import java.util.List;
-import java.io.Serializable;;
+import java.io.Serializable;
+import java.util.List;;
 public class Turn implements Serializable{
     private static final long serialVersionUID = 1L;
 
@@ -31,6 +31,12 @@ public class Turn implements Serializable{
         direction = !direction;
     }
 
+    // Skip the next player
+    public void skipNextPlayer() {
+        nextPlayer(); // move once to skip
+    }
+
+
     //get the current player
     public Player getCurrentPlayer() {
         return players.get(currentPlayerIndex);
@@ -42,4 +48,5 @@ public class Turn implements Serializable{
     }
 
 }
+//added the skipNextPlayer methode to use it in skip draw2 draw4
 //done

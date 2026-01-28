@@ -13,5 +13,16 @@ public class Bot extends Player{
 
         return null;
     }
+
+    public Card.Color chooseColor() {
+    //choose the first color of cards in hand, or random
+    for (Card c : getHand().getCards()) {
+        if (!(c instanceof WildCard)) {
+            return c.getColor(); 
+        }
+    }
+    return Card.Color.RED; // default if no other cards
 }
+}
+//added choose color method for bot to choose color when wild or wild draw4 is played
 //done

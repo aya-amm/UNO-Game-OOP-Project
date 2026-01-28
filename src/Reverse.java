@@ -10,7 +10,9 @@ public class Reverse extends ActionCard {
        //action to reverse the direction of play(reverse the player list)
        System.out.println("Reverse card played ! Directon reversed.");
        
+       // Reverse the direction of the game turn
+       game.getTurn().reverseOrder();
     }
 
 }
-//still the reverse action missing we need to do the game first
+//done
