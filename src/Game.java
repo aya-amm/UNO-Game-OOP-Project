@@ -129,7 +129,7 @@ public class Game {
 
             while (!validInput) {
                 try {
-                    System.out.print("How many bots do u want (1 - 4) ");
+                    System.out.print("How many bots do u want (1-4) ");
                     numBot = scanner.nextInt();
                     scanner.nextLine();
 
@@ -157,41 +157,40 @@ public class Game {
     }
 
 
-    private void playGame(){
+    private void playGame() {
         while (gameRunning) {
             Player currentPlayer = turn.getCurrentPlayer();
-            System.out.println("\n========================================");
-            System.out.println(currentPlayer.getName() + "'s Turn");
-            System.out.println("========================================");
-
-            // Play turn based on player type
+            
+            System.out.println("\n" + "=".repeat(50));
+            System.out.println("Current card: " + topCard);
+            System.out.println(currentPlayer.getName() + "'s turn");
+            System.out.println("Cards in hand: " + currentPlayer.getHand().getSize());
+            
             if (currentPlayer instanceof Human) {
-                playHumanTurn((Human) currentPlayer);
-            } else if(currentPlayer instanceof Bot) {
+                System.out.print("Do you want to save and quit? (yes/no): ");
+                String saveResponse = scanner.nextLine();
+                if (saveResponse.equalsIgnoreCase("yes")) {
+                    saveGame();
+                    System.out.println("Game saved. Exiting...");
+                    return;
+                }
+            }
+
+            if (currentPlayer instanceof Bot) {
                 playBotTurn((Bot) currentPlayer);
+            } else {
+                playHumanTurn((Human) currentPlayer);
             }
 
-            // Stop if game ended (save/quit)
-            if (!gameRunning) {
-                break;
-            }
-
-            // Check if current player won
-            if (currentPlayer.hasWon()) {
-                System.out.println("\n========================================");
-                System.out.println("🎉 GAME OVER! " + currentPlayer.getName() + " WINS! 🎉");
-                System.out.println("========================================");
-                gameRunning = false;
-                break;
-            }
-
-            // Check UNO challenge
             checkUNOChallenge(currentPlayer);
 
-            // Move to next player
+            if (checkWin()) {
+                State.deleteSave();
+                break;
+            }
+
             turn.nextPlayer();
         }
-
     }//the game play
     //play game we will check if he want to leave game and we will use other methods to play the game (playerTurn methods and other methods)
 
@@ -205,7 +204,7 @@ public class Game {
                 player.drawCard(drawn);
                 System.out.println("Drew: " + drawn);
                 if (drawn.playableOn(topCard)){
-                        player.PlayCard(drawn, topCard);
+                        player.playCard(drawn, topCard);
                        playCardAction(player, drawn);
                     }
                 } else {
@@ -225,7 +224,7 @@ public class Game {
             List<Card> handCards = player.getHand().getCards();
             if (idx >= 1 && idx <= handCards.size()) {
                 Card selected = handCards.get(idx - 1);
-                if (player.PlayCard(selected, topCard)) {
+                if (player.playCard(selected, topCard)) {
                     playCardAction(player, selected);
                     validChoice = true;
                 } else {
@@ -296,7 +295,7 @@ public class Game {
         
         if (currentPlayer.hasWon()) {
             System.out.println( "=".repeat(50));
-            System.out.println(currentPlayer.getName() + " WINS! 🎉");
+            System.out.println(currentPlayer.getName() + " WINS! ");
             System.out.println("=".repeat(50));
             gameRunning = false;
             return true;
