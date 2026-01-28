@@ -13,5 +13,7 @@ public class Bot extends Player{
 
         return null;
     }
+
 }
+//added choose color method for bot to choose color when wild or wild draw4 is played
 //done

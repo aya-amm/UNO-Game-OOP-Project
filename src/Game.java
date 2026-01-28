@@ -1,7 +1,7 @@
 import java.util.ArrayList;
+import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
-import java.util.InputMismatchException;
 
 public class Game {
     private List<Player> players;
@@ -69,10 +69,10 @@ public class Game {
 
         while (!validInput) {
             try {
-                System.out.print("Enter number of players (2-4): ");//max 4 players we can change it later
+                System.out.print("Enter number of players (1-4): ");//max 4 players we can change it later
                 numPlayers = scanner.nextInt();
 
-                if (numPlayers >= 2 && numPlayers <= 4) {
+                if (numPlayers >= 1 && numPlayers <= 4) {
                     validInput = true;
                 }
                 else {
@@ -92,23 +92,51 @@ public class Game {
             players.add(new Human(name));
         }
 
-        System.out.println("Add bot players? (yes/no): ");
-        String addBot = scanner.nextLine();
+        if (numPlayers > 1) {
+            System.out.println("Add bot players? (yes/no): ");
+            String addBot = scanner.nextLine();
 
-        if (addBot.equalsIgnoreCase("yes")) {
+            if (addBot.equalsIgnoreCase("yes")) {
+                int numBot = 0;
+                validInput = false;
+
+                while (!validInput) {
+                    try {
+                        System.out.print("How many bots? ");
+                        numBot = scanner.nextInt();
+                         scanner.nextLine();
+
+                        if (numBot >= 1 && numBot <=4) {
+                            validInput = true;
+                         } else {
+                            System.out.println("Invalid number. Please enter 1 or more (not more than 4).");
+                        }
+                    } catch (InputMismatchException e) {
+                        System.out.println("Invalid input. Please enter a number.");
+                        scanner.nextLine();
+                    }
+                }
+
+                for (int i = 0; i < numBot; i++) {
+                    players.add(new Bot("Bot " + (i + 1)));
+                }
+            }
+        }
+        else{
+
             int numBot = 0;
             validInput = false;
 
             while (!validInput) {
                 try {
-                    System.out.print("How many bots? ");
+                    System.out.print("How many bots do u want (1 - 4) ");
                     numBot = scanner.nextInt();
                     scanner.nextLine();
 
                     if (numBot >= 1 && numBot <=4) {
                         validInput = true;
                     } else {
-                        System.out.println("Invalid number. Please enter 1 or more (not more than 4).");
+                         System.out.println("Invalid number. Please enter 1 or more (not more than 4).");
                     }
                 } catch (InputMismatchException e) {
                     System.out.println("Invalid input. Please enter a number.");
@@ -119,8 +147,9 @@ public class Game {
             for (int i = 0; i < numBot; i++) {
                 players.add(new Bot("Bot " + (i + 1)));
             }
+            
         }
-
+        
         System.out.println("Players in game:");
         for (Player p : players) {
             System.out.println("- " + p.getName());
@@ -137,18 +166,8 @@ public class Game {
 
             // Play turn based on player type
             if (currentPlayer instanceof Human) {
-                System.out.println("Do you want to save and quit the game? (Yes/No) : ");
-                 String input = scanner.nextLine().trim();
-
-                      if (input.equalsIgnoreCase("yes") || input.equalsIgnoreCase("y")) {
-                        state = new State(players, deck, topCard, getCurrentPlayerIndex(), turn.isClockwise());
-                        state.save();
-                        gameRunning = false;
-                        System.out.println("Game saved. exited successfully.");
-                      }else{
-                        playHumanTurn((Human) currentPlayer);
-                      }
-            } else if (currentPlayer instanceof Bot) {
+                playHumanTurn((Human) currentPlayer);
+            } else if(currentPlayer instanceof Bot) {
                 playBotTurn((Bot) currentPlayer);
             }
 
@@ -173,7 +192,6 @@ public class Game {
             turn.nextPlayer();
         }
 
-        cleanup();
     }//the game play
     //play game we will check if he want to leave game and we will use other methods to play the game (playerTurn methods and other methods)
 
@@ -231,7 +249,7 @@ public class Game {
         Card toPlay = bot.makeMove(topCard);
 
         if (toPlay != null) {
-            if (bot.PlayCard(toPlay, topCard)) {
+            if (bot.playCard(toPlay, topCard)) {
                 deck.addDiscardPile(toPlay);
                 playCardAction(bot, toPlay);
                 topCard = toPlay;
@@ -247,7 +265,7 @@ public class Game {
             bot.drawCard(drawn);
             System.out.println(bot.getName() + " drew a card.");
             if (drawn.playableOn(topCard)) {
-                if (bot.PlayCard(drawn, topCard)) {
+                if (bot.playCard(drawn, topCard)) {
                     deck.addDiscardPile(drawn);
                     playCardAction(bot, drawn);
                     topCard = drawn;
@@ -258,10 +276,51 @@ public class Game {
             System.out.println(bot.getName() + " could not draw a card.");
         }
     }
+   
+     private void playCardAction(Player player, Card card) {
+        topCard = card;
+        deck.addDiscardPile(card);
 
-    private void playCardAction(Player player , Card card){
-        //we call the perform action of the card we played and announce UNO
-       } 
+        if (card instanceof WildCard) {
+            WildCard wildCard = (WildCard) card;
+            wildCard.performAction(this, scanner);
+        } else if (card instanceof ActionCard) {
+            ActionCard actionCard = (ActionCard) card;
+            actionCard.performAction(this);
+        }
+    }
+    
+
+    private boolean checkWin() {
+        Player currentPlayer = turn.getCurrentPlayer();
+        
+        if (currentPlayer.hasWon()) {
+            System.out.println( "=".repeat(50));
+            System.out.println(currentPlayer.getName() + " WINS! 🎉");
+            System.out.println("=".repeat(50));
+            gameRunning = false;
+            return true;
+        }
+        
+        if (currentPlayer.getHand().getSize() == 0 && !currentPlayer.hasAnnouncedUNO()) {
+            System.out.println(currentPlayer.getName() + " played their last card but forgot to say UNO!");
+            System.out.println("Drawing 2 penalty cards...");
+            
+            for (int i = 0; i < 2; i++) {
+                Card penaltyCard = deck.draw();
+                if (penaltyCard != null) {
+                    currentPlayer.drawCard(penaltyCard);
+                }
+            }
+            return false;
+        }
+        
+        return false;
+    }
+
+
+
+
 
 
     //we ask player to announce UNO Type it
