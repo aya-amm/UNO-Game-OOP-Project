@@ -52,7 +52,6 @@ public abstract class Player implements Serializable {
         this.hasAnnouncedUNO = false;
     }
 
-
     public String getName() {
         return name;
     }

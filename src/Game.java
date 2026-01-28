@@ -128,7 +128,43 @@ public class Game {
     }
 
 
-    private void playGame(){}//the game play
+    private void playGame(){
+        while (gameRunning) {
+            Player currentPlayer = turn.getCurrentPlayer();
+            System.out.println("\n========================================");
+            System.out.println(currentPlayer.getName() + "'s Turn");
+            System.out.println("========================================");
+
+            // Play turn based on player type
+            if (currentPlayer instanceof Human) {
+                playHumanTurn((Human) currentPlayer);
+            } else if (currentPlayer instanceof Bot) {
+                playBotTurn((Bot) currentPlayer);
+            }
+
+            // Stop if game ended (save/quit)
+            if (!gameRunning) {
+                break;
+            }
+
+            // Check if current player won
+            if (currentPlayer.hasWon()) {
+                System.out.println("\n========================================");
+                System.out.println("🎉 GAME OVER! " + currentPlayer.getName() + " WINS! 🎉");
+                System.out.println("========================================");
+                gameRunning = false;
+                break;
+            }
+
+            // Check UNO challenge
+            checkUNOChallenge(currentPlayer);
+
+            // Move to next player
+            turn.nextPlayer();
+        }
+
+        cleanup();
+    }//the game play
     //play game we will check if he want to leave game and we will use other methods to play the game (playerTurn methods and other methods)
 
     private void playHumanTurn(Human player) { // for human player
@@ -139,7 +175,7 @@ public class Game {
         String input = scanner.nextLine().trim();
 
         if (input.equalsIgnoreCase("S")) {
-            state = new State(players, deck, topCard, player, turn.isClockwise());
+            state = new State(players, deck, topCard, getCurrentPlayerIndex(), turn.isClockwise());
             state.save();
             gameRunning = false;
             return;
@@ -158,8 +194,6 @@ public class Game {
                             deck.addDiscardPile(drawn);
                             playCardAction(player, drawn);
                             topCard = drawn;
-                            if (player.announceUNO()) System.out.println("UNO! " + player.getName());
-                        }
                     }
                 }
             } else {
@@ -177,7 +211,6 @@ public class Game {
                     deck.addDiscardPile(selected);
                     playCardAction(player, selected);
                     topCard = selected;
-                    if (player.announceUNO()) System.out.println("UNO! " + player.getName());
                 } else {
                     System.out.println("Cannot play this card.");
                 }
@@ -187,6 +220,7 @@ public class Game {
         } catch (NumberFormatException e) {
             System.out.println("Invalid input.");
         }
+    }
     }
 
     private void playBotTurn(Bot bot) { //the bot turn
@@ -199,10 +233,9 @@ public class Game {
                 playCardAction(bot, toPlay);
                 topCard = toPlay;
                 System.out.println(bot.getName() + " played: " + toPlay);
-                if (bot.announceUNO()) {
-                    System.out.println("UNO! " + bot.getName());
+               
                 return;
-                }
+                
             }
         }
 
@@ -216,19 +249,17 @@ public class Game {
                     playCardAction(bot, drawn);
                     topCard = drawn;
                     System.out.println(bot.getName() + " played drawn: " + drawn);
-                    if (bot.announceUNO()) System.out.println("UNO! " + bot.getName());
-                }
+                   }
             }
         } else {
             System.out.println(bot.getName() + " could not draw a card.");
         }
     }
 
-    private void playCardAction(Player player , Card card){}//we call the perform action of the card we played and announce UNO 
+    private void playCardAction(Player player , Card card){
+        //we call the perform action of the card we played and announce UNO
+       } 
 
-    private boolean checkWin(){ // check if he said uno and if he have no more cards
-        return false;
-    }
 
     //we ask player to announce UNO Type it
     private void checkUNOChallenge(Player currentPlayer) {
