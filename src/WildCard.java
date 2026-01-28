@@ -73,7 +73,6 @@ public class WildCard extends Card {
                     nextPlayer.drawCard(drawnCard);
                 }
             }
-            game.getTurn().nextPlayer();
         }
     }
        
