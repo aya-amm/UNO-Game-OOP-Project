@@ -1,3 +1,4 @@
+package game;
 import java.util.Scanner;
 import java.util.Random;
 public class WildCard extends Card {

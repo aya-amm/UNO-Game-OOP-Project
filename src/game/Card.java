@@ -1,3 +1,4 @@
+package game;
 import java.io.Serializable;
 public abstract class Card implements Playable,Serializable {
 

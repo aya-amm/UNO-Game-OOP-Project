@@ -1,4 +1,4 @@
-
+package game;
 public class Reverse extends ActionCard {
 
     public Reverse(Color color) {

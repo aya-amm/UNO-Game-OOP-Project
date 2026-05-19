@@ -1,3 +1,4 @@
+package game;
 import java.io.Serializable;
 public abstract class Player implements Serializable {
 

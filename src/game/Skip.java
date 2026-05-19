@@ -1,3 +1,4 @@
+package game;
 public class Skip extends ActionCard {
 
     public Skip(Color color) {

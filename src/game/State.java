@@ -1,3 +1,4 @@
+package game;
 import java.io.*;
 import java.util.List;
 public class State implements Serializable{

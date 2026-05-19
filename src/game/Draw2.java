@@ -1,3 +1,4 @@
+package game;
 
 public class Draw2 extends ActionCard {
 
